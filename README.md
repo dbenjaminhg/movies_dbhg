@@ -6,24 +6,24 @@ A movie flutter application
 
 Used to translate
 flutter_localizations
-intl: any
+intl
 
-Used to pestist data
-hive: ^2.2.3
-isar_flutter_libs: ^4.0.0-dev.13
-path_provider: ^2.1.0
+Used to persist data
+hive
+isar_flutter_libs
+path_provider
 
 Used to consume AP
-http: ^1.3.0
+http
 
 Used to cached the image
-cached_network_image: ^3.0.0
+cached_network_image
 
 Used to show the list of movies in a carousel
-carousel_slider: ^5.0.0
+carousel_slider
 
 Used to validate the connectivity of the device
-connectivity: ^3.0.6
+connectivity_plus
 
 Used to implement the MVVM
-provider: ^6.1.2
+provider

@@ -32,7 +32,7 @@ class _MovieScreenState extends State<MovieScreen> {
     });
   }
 
-  //Widget to create the movie list splitted in two sections
+  //Widget to create the movie list split in two sections
   Widget getMovieWidget(BuildContext context, ApiResponse apiResponse) {
     if (apiResponse.data != null) {
       List<Movie>? moviePopularList = apiResponse.data[0] as List<Movie>?;
@@ -40,7 +40,7 @@ class _MovieScreenState extends State<MovieScreen> {
       if (moviePopularList != null && moviePlayNowList != null) {
         switch (apiResponse.status) {
           case Status.LOADING:
-            return Center(child: CircularProgressIndicator());
+            return Center(child: Column(children: [CircularProgressIndicator(), Text('Loading status')],));
           case Status.COMPLETED:
             return Column(
               mainAxisSize: MainAxisSize.min,
@@ -130,24 +130,20 @@ class _MovieScreenState extends State<MovieScreen> {
           case Status.ERROR:
             return Center(child: Text(AppLocalizations.of(context)!.retry));
           case Status.INITIAL:
-            return Center(child: CircularProgressIndicator());
+            return Center(child: Column(children: [CircularProgressIndicator(), Text('Initial status')],));
         }
       } else {
         lan = MovieApp.of(context).getLocale();
-        Future.delayed(Duration.zero, () {
+        Future.delayed(Duration(seconds: 10), () {
           Provider.of<MovieViewModel>(
             context,
             listen: false,
           ).fetchMovieData(lan);
         });
-        return Center(child: CircularProgressIndicator());
+        return Center(child: Column(children: [CircularProgressIndicator(), Text('Data empty')],));
       }
     } else {
-      lan = MovieApp.of(context).getLocale();
-      Future.delayed(Duration.zero, () {
-        Provider.of<MovieViewModel>(context, listen: false).fetchMovieData(lan);
-      });
-      return Center(child: CircularProgressIndicator());
+      return Center(child: Column(children: [CircularProgressIndicator(), Text('No response yet')],));
     }
   }
 
