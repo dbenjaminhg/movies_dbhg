@@ -5,7 +5,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
-  static const routeName = '/';
   @override
   // ignore: library_private_types_in_public_api
   _SettingsScreenState createState() => _SettingsScreenState();

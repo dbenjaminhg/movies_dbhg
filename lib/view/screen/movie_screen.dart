@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movies_dbhg/model/movie.dart';
 import 'package:movies_dbhg/model/responses/api_response.dart';
+import 'package:movies_dbhg/view/screen/moview_detail_screen.dart';
 import 'package:movies_dbhg/view/screen/settings_screen.dart';
 import 'package:movies_dbhg/view/widgets/movie_list.dart';
 import 'package:movies_dbhg/view_model/movie_view_model.dart';
@@ -9,19 +10,19 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MovieScreen extends StatefulWidget {
   const MovieScreen({super.key});
-  static const routeName = '/';
   @override
   // ignore: library_private_types_in_public_api
   _MovieScreenState createState() => _MovieScreenState();
 }
 
 class _MovieScreenState extends State<MovieScreen> {
-  List<Movie> movies = [];
+  final SearchController controller = SearchController();
 
   @override
   void initState() {
     super.initState();
     Future.delayed(Duration(seconds: 5), () {
+      // ignore: use_build_context_synchronously
       Provider.of<MovieViewModel>(context, listen: false).fetchMovieData();
     });
   }
@@ -36,6 +37,62 @@ class _MovieScreenState extends State<MovieScreen> {
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              SearchAnchor(
+                searchController: controller,
+                builder: (BuildContext context, SearchController controller) {
+                  return SearchBar(
+                    controller: controller,
+                    padding: const WidgetStatePropertyAll<EdgeInsets>(
+                      EdgeInsets.symmetric(horizontal: 16.0),
+                    ),
+                    onTap: () {
+                      controller.openView();
+                    },
+                    onChanged: (_) {
+                      controller.openView();
+                    },
+                    leading: const Icon(Icons.search),
+                  );
+                },
+                suggestionsBuilder: (
+                  BuildContext context,
+                  SearchController controller,
+                ) {
+                  List<Movie>? filteredList =
+                      movieList
+                          .where(
+                            (Movie movie) => movie.title
+                                .toLowerCase()
+                                .startsWith(controller.text.toLowerCase()),
+                          )
+                          .toList();
+
+                  return List<ListTile>.generate(filteredList.length, (
+                    int index,
+                  ) {
+                    final String item = filteredList[index].title;
+                    return ListTile(
+                      title: Text(item),
+                      onTap: () {
+                        setState(() {
+                          controller.closeView(item);
+                          controller.text = '';
+                        });
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) => MovieDetailScreen(
+                                  movie: filteredList[index],
+                                ),
+                          ),
+                        );
+                      },
+                    );
+                  });
+                },
+              ),
+
               Expanded(
                 flex: 2,
                 child: Align(
