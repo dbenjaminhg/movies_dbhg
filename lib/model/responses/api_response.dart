@@ -1,3 +1,4 @@
+// Class ApiResponse create to hadler the status of the request
 class ApiResponse<T> {
   Status status;
   T? data;

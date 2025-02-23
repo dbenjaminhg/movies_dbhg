@@ -6,6 +6,9 @@ import 'package:movies_dbhg/model/constants.dart';
 import 'package:movies_dbhg/model/movie.dart';
 import 'package:movies_dbhg/view/screen/moview_detail_screen.dart';
 
+// Widget to display the list of movies
+// @param movies: List of movies to display
+// @param titleSection: Title of the section
 class MovieList extends StatelessWidget {
   final List<Movie> movies;
   final String titleSection;

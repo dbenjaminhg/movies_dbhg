@@ -10,9 +10,12 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Initialize Hive
   final dir = await getApplicationDocumentsDirectory();
   Hive.init(dir.path);
+  // Setting the name of the database
   await Hive.openBox('MovieService');
+
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -34,12 +37,14 @@ class MovieApp extends StatefulWidget {
 class MovieAppState extends State<MovieApp> {
   late Locale _locale = Locale('en');
 
+  // Method to set the locale
   void setLocale(Locale value) {
     setState(() {
       _locale = value;
     });
   }
 
+  // Method to get current the locale
   String getLocale() {
     return _locale.languageCode;
   }

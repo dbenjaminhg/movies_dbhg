@@ -10,6 +10,7 @@ List<Movie> movieFromJson(String str) =>
 String movieToJson(List<Movie> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
+// Class Movie to store the movie details
 class Movie {
   bool adult;
   String backdropPath;

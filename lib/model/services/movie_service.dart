@@ -9,6 +9,7 @@ import 'dart:convert';
 
 import 'package:movies_dbhg/model/services/app_base_service.dart';
 
+// Class MovieService created to execute the apis and handler the response of the request
 class MovieService extends AppBaseService {
   final box = Hive.box('MovieService');
 

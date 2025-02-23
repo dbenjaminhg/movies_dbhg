@@ -1,3 +1,4 @@
+// Class AppExceptions created to handle the exceptions
 class AppExceptions implements Exception {
   final _message;
   final _prefix;

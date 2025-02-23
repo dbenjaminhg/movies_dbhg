@@ -16,8 +16,7 @@ class MovieViewModel with ChangeNotifier {
     return _movie;
   }
 
-  /// Call the movie service and gets the data of requested movie data of
-  /// an artist.
+  /// Call the movie service and gets the data of requested movies.
   Future<void> fetchMovieData(String lan) async {
     if (_apiResponse.status == Status.INITIAL) {
       _apiResponse = ApiResponse.loading('Fetching artist data');

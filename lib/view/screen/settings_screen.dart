@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:movies_dbhg/main.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+//Screen to select the language Spanish or English
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
   @override

@@ -5,6 +5,7 @@ import 'package:movies_dbhg/model/constants.dart';
 import 'package:movies_dbhg/model/movie.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+//Screen to show the detail of the movie
 class MovieDetailScreen extends StatelessWidget {
   final Movie movie;
 

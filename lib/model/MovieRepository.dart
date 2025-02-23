@@ -4,10 +4,12 @@ import 'package:movies_dbhg/model/movie.dart';
 import 'package:movies_dbhg/model/services/app_base_service.dart';
 import 'package:movies_dbhg/model/services/movie_service.dart';
 
+// Class Repository to fetch the data from the api
 class MovieRepository {
   // ignore: prefer_final_fields
   AppBaseService _movieService = MovieService();
 
+  // Methods to fetch the list of popular movies
   Future<List<Movie>> fetchPopularMoviesList(String lan) async {
     String url =
         '${Constants.baseUrl}${EndPoints.popularMovies}&api_key=${Constants.apiKey}';
@@ -19,6 +21,7 @@ class MovieRepository {
     return movieList;
   }
 
+  // Method to fetch the list of movies playing now
   Future<List<Movie>> fetchPlayNowMoviesList(int page, String lan) async {
     var now = DateTime.now();
     var minDateT = DateTime(now.year, now.month, now.day - 7);
@@ -41,6 +44,7 @@ class MovieRepository {
     return movieList;
   }
 
+  // Method to return the language code
   static String getLanCode(String lan) {
     String languageCode = 'en-US';
     if (lan == 'en') {

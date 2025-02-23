@@ -9,6 +9,9 @@ import 'package:movies_dbhg/view_model/movie_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+// Screen to display the lists of movies
+// There are two sections Popular Movies and Play Now Movies
+
 class MovieScreen extends StatefulWidget {
   const MovieScreen({super.key});
   @override
@@ -29,6 +32,7 @@ class _MovieScreenState extends State<MovieScreen> {
     });
   }
 
+  //Widget to create the movie list splitted in two sections
   Widget getMovieWidget(BuildContext context, ApiResponse apiResponse) {
     if (apiResponse.data != null) {
       List<Movie>? moviePopularList = apiResponse.data[0] as List<Movie>?;
@@ -62,8 +66,11 @@ class _MovieScreenState extends State<MovieScreen> {
                     BuildContext context,
                     SearchController controller,
                   ) {
+                    //Filtering the list according to the search text
                     List<Movie>? filteredList =
-                        moviePopularList
+                        [moviePlayNowList, moviePopularList]
+                            .expand((x) => x)
+                            .toList()
                             .where(
                               (Movie movie) => movie.title
                                   .toLowerCase()
