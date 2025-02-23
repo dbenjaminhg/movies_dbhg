@@ -4,13 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:movies_dbhg/model/constants.dart';
 import 'package:movies_dbhg/model/movie.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:movies_dbhg/view/screen/moview_detail_screen.dart';
 
 class MovieList extends StatelessWidget {
   final List<Movie> movies;
+  final String titleSection;
 
-  const MovieList({super.key, required this.movies});
+  const MovieList({
+    super.key,
+    required this.movies,
+    required this.titleSection,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,20 +23,20 @@ class MovieList extends StatelessWidget {
       itemBuilder: (context, index) {
         return Column(
           children: [
-            Text(AppLocalizations.of(context)!.top_movies),
+            Text(titleSection),
             CarouselSlider(
               options: CarouselOptions(
                 height: 450.0,
                 aspectRatio: 16 / 9,
                 viewportFraction: 0.8,
                 initialPage: 0,
-                enableInfiniteScroll: true,
+                enableInfiniteScroll: false,
                 reverse: false,
                 autoPlay: true,
                 autoPlayInterval: Duration(seconds: 3),
                 autoPlayAnimationDuration: Duration(milliseconds: 800),
                 autoPlayCurve: Curves.fastOutSlowIn,
-                enlargeCenterPage: true,
+                enlargeCenterPage: false,
                 enlargeFactor: 0.3,
                 onPageChanged: (index, reason) {
                   if (kDebugMode) {

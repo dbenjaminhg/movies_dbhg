@@ -1,7 +1,8 @@
 {
   "movies": "Películas",
   "retry": "Por favor intenta de nuevo",
-  "top_movies": "Top películas",
+  "popular_movies": "Películas Populares",
+  "play_movies": "Películas en Cartelera",
   "release_date": "Fecha de publicación",
   "genres": "Generos",
   "settings": "Configuración",

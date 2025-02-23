@@ -40,6 +40,10 @@ class MovieAppState extends State<MovieApp> {
     });
   }
 
+  String getLocale() {
+    return _locale.languageCode;
+  }
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {

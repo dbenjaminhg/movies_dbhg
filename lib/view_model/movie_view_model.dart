@@ -18,13 +18,17 @@ class MovieViewModel with ChangeNotifier {
 
   /// Call the movie service and gets the data of requested movie data of
   /// an artist.
-  Future<void> fetchMovieData() async {
+  Future<void> fetchMovieData(String lan) async {
     if (_apiResponse.status == Status.INITIAL) {
       _apiResponse = ApiResponse.loading('Fetching artist data');
       notifyListeners();
       try {
-        List<Movie> movieList = await MovieRepository().fetchMoviesList();
-        _apiResponse = ApiResponse.completed(movieList);
+        List<Movie> movieList = await MovieRepository().fetchPopularMoviesList(
+          lan,
+        );
+        List<Movie> movieNowList = await MovieRepository()
+            .fetchPlayNowMoviesList(1, lan);
+        _apiResponse = ApiResponse.completed([movieList, movieNowList]);
       } catch (e) {
         _apiResponse = ApiResponse.error(e.toString());
         if (kDebugMode) {

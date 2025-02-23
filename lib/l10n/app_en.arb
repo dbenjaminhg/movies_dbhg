@@ -1,7 +1,8 @@
 {
   "movies": "Movies",
   "retry": "Please try again latter",
-  "top_movies": "Top movies",
+  "popular_movies": "Popular movies",
+  "play_movies": "Play now movies",
   "release_date": "Release date",
   "genres": "Genres",
   "settings": "Settings",

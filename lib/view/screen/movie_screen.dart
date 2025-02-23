@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movies_dbhg/main.dart';
 import 'package:movies_dbhg/model/movie.dart';
 import 'package:movies_dbhg/model/responses/api_response.dart';
 import 'package:movies_dbhg/view/screen/moview_detail_screen.dart';
@@ -17,99 +18,127 @@ class MovieScreen extends StatefulWidget {
 
 class _MovieScreenState extends State<MovieScreen> {
   final SearchController controller = SearchController();
-
+  String lan = 'en';
   @override
   void initState() {
     super.initState();
+    lan = MovieApp.of(context).getLocale();
     Future.delayed(Duration(seconds: 5), () {
       // ignore: use_build_context_synchronously
-      Provider.of<MovieViewModel>(context, listen: false).fetchMovieData();
+      Provider.of<MovieViewModel>(context, listen: false).fetchMovieData(lan);
     });
   }
 
   Widget getMovieWidget(BuildContext context, ApiResponse apiResponse) {
-    List<Movie>? movieList = apiResponse.data as List<Movie>?;
-    if (movieList != null) {
-      switch (apiResponse.status) {
-        case Status.LOADING:
-          return Center(child: CircularProgressIndicator());
-        case Status.COMPLETED:
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SearchAnchor(
-                searchController: controller,
-                builder: (BuildContext context, SearchController controller) {
-                  return SearchBar(
-                    controller: controller,
-                    padding: const WidgetStatePropertyAll<EdgeInsets>(
-                      EdgeInsets.symmetric(horizontal: 16.0),
-                    ),
-                    onTap: () {
-                      controller.openView();
-                    },
-                    onChanged: (_) {
-                      controller.openView();
-                    },
-                    leading: const Icon(Icons.search),
-                  );
-                },
-                suggestionsBuilder: (
-                  BuildContext context,
-                  SearchController controller,
-                ) {
-                  List<Movie>? filteredList =
-                      movieList
-                          .where(
-                            (Movie movie) => movie.title
-                                .toLowerCase()
-                                .startsWith(controller.text.toLowerCase()),
-                          )
-                          .toList();
-
-                  return List<ListTile>.generate(filteredList.length, (
-                    int index,
-                  ) {
-                    final String item = filteredList[index].title;
-                    return ListTile(
-                      title: Text(item),
+    if (apiResponse.data != null) {
+      List<Movie>? moviePopularList = apiResponse.data[0] as List<Movie>?;
+      List<Movie>? moviePlayNowList = apiResponse.data[1] as List<Movie>?;
+      if (moviePopularList != null && moviePlayNowList != null) {
+        switch (apiResponse.status) {
+          case Status.LOADING:
+            return Center(child: CircularProgressIndicator());
+          case Status.COMPLETED:
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SearchAnchor(
+                  searchController: controller,
+                  builder: (BuildContext context, SearchController controller) {
+                    return SearchBar(
+                      controller: controller,
+                      padding: const WidgetStatePropertyAll<EdgeInsets>(
+                        EdgeInsets.symmetric(horizontal: 16.0),
+                      ),
                       onTap: () {
-                        setState(() {
-                          controller.closeView(item);
-                          controller.text = '';
-                        });
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder:
-                                (context) => MovieDetailScreen(
-                                  movie: filteredList[index],
-                                ),
-                          ),
-                        );
+                        controller.openView();
                       },
+                      onChanged: (_) {
+                        controller.openView();
+                      },
+                      leading: const Icon(Icons.search),
                     );
-                  });
-                },
-              ),
+                  },
+                  suggestionsBuilder: (
+                    BuildContext context,
+                    SearchController controller,
+                  ) {
+                    List<Movie>? filteredList =
+                        moviePopularList
+                            .where(
+                              (Movie movie) => movie.title
+                                  .toLowerCase()
+                                  .startsWith(controller.text.toLowerCase()),
+                            )
+                            .toList();
 
-              Expanded(
-                flex: 2,
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: MovieList(movies: movieList),
+                    return List<ListTile>.generate(filteredList.length, (
+                      int index,
+                    ) {
+                      final String item = filteredList[index].title;
+                      return ListTile(
+                        title: Text(item),
+                        onTap: () {
+                          setState(() {
+                            controller.closeView(item);
+                            controller.text = '';
+                          });
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) => MovieDetailScreen(
+                                    movie: filteredList[index],
+                                  ),
+                            ),
+                          );
+                        },
+                      );
+                    });
+                  },
                 ),
-              ),
-            ],
-          );
-        case Status.ERROR:
-          return Center(child: Text(AppLocalizations.of(context)!.retry));
-        case Status.INITIAL:
-          return Center(child: CircularProgressIndicator());
+
+                Expanded(
+                  flex: 2,
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: MovieList(
+                      movies: moviePopularList,
+                      titleSection:
+                          AppLocalizations.of(context)!.popular_movies,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: MovieList(
+                      movies: moviePlayNowList,
+                      titleSection: AppLocalizations.of(context)!.play_movies,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          case Status.ERROR:
+            return Center(child: Text(AppLocalizations.of(context)!.retry));
+          case Status.INITIAL:
+            return Center(child: CircularProgressIndicator());
+        }
+      } else {
+        lan = MovieApp.of(context).getLocale();
+        Future.delayed(Duration.zero, () {
+          Provider.of<MovieViewModel>(
+            context,
+            listen: false,
+          ).fetchMovieData(lan);
+        });
+        return Center(child: CircularProgressIndicator());
       }
     } else {
+      lan = MovieApp.of(context).getLocale();
       Future.delayed(Duration.zero, () {
-        Provider.of<MovieViewModel>(context, listen: false).fetchMovieData();
+        Provider.of<MovieViewModel>(context, listen: false).fetchMovieData(lan);
       });
       return Center(child: CircularProgressIndicator());
     }
