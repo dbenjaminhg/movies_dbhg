@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 import 'package:movies_dbhg/model/exceptions/app_exceptions.dart';
 import 'dart:convert';
@@ -8,20 +10,7 @@ import 'dart:convert';
 import 'package:movies_dbhg/model/services/app_base_service.dart';
 
 class MovieService extends AppBaseService {
-  // static Future<List<Movie>> fetchMovies() async {
-  //   final response = await http.get(
-  //     Uri.parse(
-  //       '${Constants.baseUrl}/movie/popular?api_key=${Constants.apiKey}',
-  //     ),
-  //   );
-  //   if (response.statusCode == 200) {
-  //     final data = json.decode(response.body);
-  //     final List<dynamic> results = data['results'];
-  //     return results.map((json) => Movie.fromJson(json)).toList();
-  //   } else {
-  //     throw Exception('Failed to fetch movies');
-  //   }
-  // }
+  final box = Hive.box('MovieService');
 
   @visibleForTesting
   dynamic returnResponse(http.Response response) {
@@ -46,8 +35,19 @@ class MovieService extends AppBaseService {
   Future getResponse(String url) async {
     dynamic responseJson;
     try {
-      final response = await http.get(Uri.parse(url));
-      responseJson = returnResponse(response);
+      var connectivityResult = await (Connectivity().checkConnectivity());
+      if (connectivityResult == ConnectivityResult.mobile ||
+          connectivityResult == ConnectivityResult.wifi) {
+        final response = await http.get(Uri.parse(url));
+        if (response.statusCode == 200) {
+          box.put(url, response.body.toString());
+          responseJson = returnResponse(response);
+        }
+      } else {
+        if (box.containsKey(url)) {
+          responseJson = jsonDecode(box.get(url));
+        }
+      }
     } on SocketException {
       throw FetchDataException('No Internet Connection');
     }
